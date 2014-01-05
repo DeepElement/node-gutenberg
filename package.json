@@ -3,7 +3,7 @@
   "name": "gutenberg",
   "private": false,
   "description": "Apis for the gutenberg catalog",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "repository": {
     "url": "https://github.com/DeepElement/node-gutenberg.git"
   },
@@ -13,7 +13,9 @@
   "main": "./bin/gutenberg",
   "dependencies": {
     "request" : "*",
-    "async" : "*"
+    "async" : "*",
+    "adm-zip" : "*",
+    "mkdirp" : "*"
   },
   "devDependencies": {
     "should" : "*"

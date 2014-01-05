@@ -19,6 +19,7 @@ describe('api integration', function() {
 						done(err);
 
 					should.exist(resp);
+					resp.length.should.be.above(30000);
 					done();
 				});
 		});
