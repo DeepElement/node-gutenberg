@@ -1,0 +1,21 @@
+{
+  "author": "Todd Morrison",
+  "name": "node-gutenberg",
+  "private": false,
+  "description": "Apis for the gutenberg catalog",
+  "version": "0.1.0",
+  "repository": {
+    "url": "https://github.com/DeepElement/node-gutenberg.git"
+  },
+  "bin": {
+    "gutenberg": "./bin/gutenberg.js"
+  },
+  "main": "./bin/gutenberg",
+  "dependencies": {
+  },
+  "devDependencies": {
+  },
+  "optionalDependencies": {
+    
+  }
+}
