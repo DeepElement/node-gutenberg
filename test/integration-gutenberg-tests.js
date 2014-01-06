@@ -14,7 +14,7 @@ describe('api integration', function() {
 			this.timeout(999999);
 			var instance = new gutenberg(
 				{
-					//rdfFile : path.join(__dirname, "gutenberg.rdf.zip")
+					rdfFile : path.join(__dirname, "gutenberg.rdf.zip")
 				});
 			instance.catalogueGetRecords({},
 				function(err, resp) {
