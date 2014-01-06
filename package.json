@@ -19,9 +19,13 @@
     "libxmljs" : "*"
   },
   "devDependencies": {
-    "should" : "*"
+    "should" : "*",
+    "mocha" : "*"
   },
   "optionalDependencies": {
     
+  },
+  "scripts": {
+    "test": "mocha"
   }
 }
