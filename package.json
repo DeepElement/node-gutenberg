@@ -3,7 +3,7 @@
   "name": "gutenberg",
   "private": false,
   "description": "Apis for the gutenberg catalog",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "repository": {
     "url": "https://github.com/DeepElement/node-gutenberg.git"
   },
