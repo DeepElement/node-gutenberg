@@ -10,11 +10,12 @@ var request = require('request'),
 // Constructor
 var gutenberg = function(options) {
 	this.options = options || {};
+
 	this._endpoints = {
 		catalogue: this.options.catalogue || "http://gutenberg.readingroo.ms/cache/generated/feeds/catalog.rdf.zip"
 	};
 	this._cacheDir = this.options.cacheDir || path.join(__dirname, '/cache');
-	this._zipFile = path.join(this._cacheDir, 'gutenburg.rdf.zip');
+	this._zipFile = this.options.rdfFile || path.join(this._cacheDir, 'gutenberg.rdf.zip');
 }
 
 // Parms: format
@@ -81,6 +82,7 @@ gutenberg.prototype._fetchCatalogue = function(callback) {
 					fs.exists(self._zipFile,
 						function(exists) {
 							if (!exists) {
+								console.log('fetching rdf');
 								http.get(self._endpoints.catalogue, function(response) {
 									if (response.statusCode !== 200) {
 										return done(response.statusCode);
