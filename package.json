@@ -18,7 +18,8 @@
     "mkdirp" : "*"
   },
   "devDependencies": {
-    "should" : "*"
+    "should" : "*",
+    "mocha" : "*"
   },
   "optionalDependencies": {
     
