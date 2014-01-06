@@ -15,7 +15,8 @@
     "request" : "*",
     "async" : "*",
     "adm-zip" : "*",
-    "mkdirp" : "*"
+    "mkdirp" : "*",
+    "temp" : "*"
   },
   "devDependencies": {
     "should" : "*",
