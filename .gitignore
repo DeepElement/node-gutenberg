@@ -14,3 +14,4 @@ results
 npm-debug.log
 node_modules
 bin/cache/gutenburg.rdf.zip
+bin/cache/gutenberg.rdf

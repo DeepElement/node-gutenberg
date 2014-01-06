@@ -3,7 +3,7 @@ var util = require('./test'),
 	should = require('should');
 
 describe('api integration', function() {
-	describe('catalogueGetAllDownloadUrls', function() {
+	describe('catalogueGetRecords', function() {
 
 		beforeEach(function(done) {
 			done();
@@ -11,9 +11,8 @@ describe('api integration', function() {
 
 		it('Validate download integrity', function(done) {
 			this.timeout(999999);
-			gutenberg.catalogueGetAllDownloadUrls({
-					format: 'txt'
-				},
+			var instance = new gutenberg();
+			instance.catalogueGetRecords({},
 				function(err, resp) {
 					if (err)
 						done(err);
