@@ -14,6 +14,15 @@ var gutenberg = function(options) {
 	this._rsyncDir = this.options.catalogDir;
 }
 
+gutenberg.prototype.getCatalogueItemByKey = function(key, callback) {
+	var keyClean = key.replace('etext', '');
+	var documentRoot = path.join(this._rsyncDir, keyClean[0], keyClean[1], keyClean[2],keyClean[3], keyClean);
+	var contentZipFile = path.join(documentRoot, keyClean + ".zip");
+	var zip = new AdmZip(contentZipFile);
+	var data = zip.readAsText(keyClean + ".txt");
+	callback(null, data);
+}
+
 // Parms: format
 gutenberg.prototype.catalogueGetRecords = function(options, callback) {
 	var self = this;
