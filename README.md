@@ -33,6 +33,7 @@ Note: the implementation expects the hierarchy of small directories, rather than
 1. Create file gutenberg-sync.sh with the following contents:
 ```
 rsync -av --progress --del ftp@ftp.ibiblio.org::gutenberg [catalog path]/catalog < /dev/null &
+
 wget http://gutenberg.readingroo.ms/cache/generated/feeds/catalog.rdf.zip [catalog path]/catalog.rdf.zip
 ```
 - Replace [catalog path] with your desired path
