@@ -32,13 +32,16 @@ Note: the implementation expects the hierarchy of small directories, rather than
 ## [Cron](http://en.wikipedia.org/wiki/Cron) data dependencies
 1. Create file gutenberg-sync.sh with the following contents:
 ```
-rsync -av --progress --del ftp@ftp.ibiblio.org::gutenberg [catalog path]/catalog < /dev/null &
-wget http://gutenberg.readingroo.ms/cache/generated/feeds/catalog.rdf.zip [catalog path]/catalog.rdf.zip
+    rsync -av --progress --del ftp@ftp.ibiblio.org::gutenberg [catalog path]/catalog < /dev/null &
+    
+    wget http://gutenberg.readingroo.ms/cache/generated/feeds/catalog.rdf.zip [catalog path]/catalog.rdf.zip
 ```
+
 - Replace [catalog path] with your desired path
 
 2. Grant the script execution rights `chmod +x gutenberg-sync.sh' 
 3. Run `crontab -e` and append a weekly screen execution `5 8 * * 6 [user] [script path]/gutenberg-sync.sh` 
+
 - Replace [user] with the system user that will be executing the job
 - Replace [script path] with the location of your shell script
 
@@ -62,6 +65,7 @@ Parse the rdfFile and process array of json records for each etext.
 
 #Contact & Issues
 Issues: https://github.com/DeepElement/node-gutenberg/issues
+
 CI: https://travis-ci.org/DeepElement/node-gutenberg
 
 License
