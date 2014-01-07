@@ -8,9 +8,7 @@ APIs for interacting with Project Gutenberg
 1. [rsync](http://ss64.com/bash/rsync.html) the Gutenberg catalogue to a local directory using the [Mirror instructions ](http://www.gutenberg.org/wiki/Gutenberg:Mirroring_How-To) provided by http://www.gutenberg.org/.
 **Warning: this catalogue includes all file exports and is ~650gb**
 
-2. (Optional), download the gutenberg catalogue metadata via [RDF (Current Format)](http://www.gutenberg.org/wiki/Gutenberg:Feeds) as provided by http://www.gutenberg.org. 
-
-  _Note: module will fetch RDF live (~20s) if not provided on constructor configuration_
+2. Download the gutenberg catalogue metadata via [Zipped RDF(Current Format)](http://www.gutenberg.org/wiki/Gutenberg:Feeds) as provided by http://www.gutenberg.org. 
 
 3. Instantiate the gutenberg module instance with options: 
 ```
@@ -18,7 +16,7 @@ APIs for interacting with Project Gutenberg
 
   var instance = new gutenberg({
       catalogDir : "../path/to/rsync/gutenberg/dir",
-      rdfFile: "../path/to/gutenberg/rdf"
+      rdfFile: "../path/to/gutenberg/gutenberg.rdf.zip"
   );
   instance.catalogueGetRecords({},
 				function(err, records) {
@@ -29,6 +27,21 @@ APIs for interacting with Project Gutenberg
 				});
 ```
 
+#Optional Recommendations
+## [Cron](http://en.wikipedia.org/wiki/Cron) data dependencies
+1. Create file gutenberg-sync.sh with the following contents:
+```
+rsync -av --progress --del ftp@ftp.ibiblio.org::gutenberg-epub [catalog path]/catalog < /dev/null &
+wget http://gutenberg.readingroo.ms/cache/generated/feeds/catalog.rdf.zip [catalog path]/catalog.rdf.zip
+```
+- Replace [catalog path] with your desired path
+
+2. Grant the script execution rights `chmod +x gutenberg-sync.sh' 
+3. Run `crontab -e` and append a weekly screen execution `5 8 * * 6 [user] [script path]/gutenberg-sync.sh` 
+- Replace [user] with the system user that will be executing the job
+- Replace [script path] with the location of your shell script
+
+This will sync both the gutenberg catalogue and the metadata for querying.
 
 #API
 ##Constructor
@@ -36,9 +49,7 @@ Because the gutenberg catalogue is massive and there exists a bandwidth cap (per
 
 ###Required
 - catalogDir - the directory location for a synced gutenberg catalogue
-
-###Optional
-- rdfFile - the RDF metadata file which describes the gutenberg catalogue. If not resent, module will fetch.
+- rdfFile - the zipped RDF metadata file which describes the gutenberg catalogue 
 
 
 ##CatalogueGetRecords

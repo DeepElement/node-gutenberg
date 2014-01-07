@@ -13,7 +13,7 @@ describe('api integration', function() {
 		it('Validate download integrity', function(done) {
 			this.timeout(999999);
 			var instance = new gutenberg({
-				rdfFile: path.join(__dirname, "gutenberg.rdf.zip")
+				rdfZipFile: path.join(__dirname, "/samples/gutenberg.rdf.zip")
 			});
 			instance.catalogueGetRecords({},
 				function(err, resp) {
