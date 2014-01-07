@@ -62,6 +62,7 @@ Parse the rdfFile and process array of json records for each etext.
 
 #Contact & Issues
 Issues: https://github.com/DeepElement/node-gutenberg/issues
+
 CI: https://travis-ci.org/DeepElement/node-gutenberg
 
 License
