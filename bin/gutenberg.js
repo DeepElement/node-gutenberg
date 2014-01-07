@@ -18,38 +18,6 @@ var gutenberg = function(options) {
 	this._zipFile = this.options.rdfFile || path.join(this._cacheDir, 'gutenberg.rdf.zip');
 }
 
-gutenberg.prototype.downloadCatalogue = function(options, recordCallback, callback) {
-	var self = this;
-	var limit = options.limit || 100000000;
-	this.catalogueGetRecords({},
-		function(err, records) {
-			if (err)
-				return callback(err);
-
-			var completed = 0;
-
-			if (limit <= records.length)
-				records = records.splice(0, limit);
-
-			async.eachLimit(records,
-				10,
-				function(item, item_callback) {
-					self._downloadFromRecord(item,
-						function(err, fileContents) {
-							if (err)
-								return item_callback(err);
-							recordCallback(item, fileContents);
-							return item_callback();
-						});
-				},
-				function(err) {
-					if (err)
-						return callback(err);
-					return callback();
-				});
-		});
-}
-
 // Parms: format
 gutenberg.prototype.catalogueGetRecords = function(options, callback) {
 	var self = this;
@@ -58,64 +26,6 @@ gutenberg.prototype.catalogueGetRecords = function(options, callback) {
 			return callback(err, records);
 		});
 	});
-}
-
-gutenberg.prototype._downloadFromRecord = function(record, callback) {
-	var result = null;
-	var cleanId = record.id.replace('etext', '');
-	async.waterfall([
-
-			function(done) {
-				var url = "http://www.gutenberg.org/files/" + cleanId + "/" + cleanId + ".txt";
-				request(url, function(error, response, body) {
-					if (error == null && response.statusCode == 200) 
-						result = body;
-					return done();
-				});
-			},
-
-			function(done) {
-				if (result == null) {
-					var url = "http://www.gutenberg.org/ebooks/" + cleanId + ".txt.utf-8";
-					request(url, function(error, response, body) {
-						if (error == null && response.statusCode == 200) 
-							result = body;
-						return done();
-					});
-				}
-				else{
-					done();
-				}
-			},
-
-			function(done) {
-				if (result == null) {
-					var url = "http://www.gutenberg.org/files/" + cleanId + "/" + cleanId + "-0.txt";
-					request(url, function(error, response, body) {
-						if (error == null && response.statusCode == 200) 
-							result = body;
-						return done();
-					});
-				}
-				else{
-					done();
-				}
-			}
-		],
-		function(err) {
-			if (err)
-				return callback(err);
-
-			if (result == null) {
-				console.log({
-					error: 'no-content-found',
-					record: record
-				});
-				return callback('no-content-found');
-			}
-
-			return callback(null, result);
-		});
 }
 
 gutenberg.prototype._parseRecords = function(callback) {
