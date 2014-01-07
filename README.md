@@ -7,6 +7,7 @@ APIs for interacting with Project Gutenberg
 
 1. [rsync](http://ss64.com/bash/rsync.html) the Gutenberg catalogue to a local directory using the [Mirror instructions ](http://www.gutenberg.org/wiki/Gutenberg:Mirroring_How-To) provided by http://www.gutenberg.org/.
 **Warning: this catalogue includes all file exports and is ~650gb**
+Note: the implementation expects the hierarchy of small directories, rather than the big root, explained in the [Mirror instructions](http://www.gutenberg.org/wiki/Gutenberg:Mirroring_How-To)
 
 2. Download the gutenberg catalogue metadata via [Zipped RDF(Current Format)](http://www.gutenberg.org/wiki/Gutenberg:Feeds) as provided by http://www.gutenberg.org. 
 
@@ -31,7 +32,7 @@ APIs for interacting with Project Gutenberg
 ## [Cron](http://en.wikipedia.org/wiki/Cron) data dependencies
 1. Create file gutenberg-sync.sh with the following contents:
 ```
-rsync -av --progress --del ftp@ftp.ibiblio.org::gutenberg-epub [catalog path]/catalog < /dev/null &
+rsync -av --progress --del ftp@ftp.ibiblio.org::gutenberg [catalog path]/catalog < /dev/null &
 wget http://gutenberg.readingroo.ms/cache/generated/feeds/catalog.rdf.zip [catalog path]/catalog.rdf.zip
 ```
 - Replace [catalog path] with your desired path
