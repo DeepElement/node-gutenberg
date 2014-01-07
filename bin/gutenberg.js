@@ -16,6 +16,7 @@ var gutenberg = function(options) {
 	};
 	this._cacheDir = this.options.cacheDir || path.join(__dirname, '/cache');
 	this._zipFile = this.options.rdfFile || path.join(this._cacheDir, 'gutenberg.rdf.zip');
+	this._rsyncDir = this.options.catalogDir;
 }
 
 // Parms: format
