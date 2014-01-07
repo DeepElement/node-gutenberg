@@ -36,10 +36,12 @@ Note: the implementation expects the hierarchy of small directories, rather than
     
     wget http://gutenberg.readingroo.ms/cache/generated/feeds/catalog.rdf.zip [catalog path]/catalog.rdf.zip
 ```
+
 - Replace [catalog path] with your desired path
 
 2. Grant the script execution rights `chmod +x gutenberg-sync.sh' 
 3. Run `crontab -e` and append a weekly screen execution `5 8 * * 6 [user] [script path]/gutenberg-sync.sh` 
+
 - Replace [user] with the system user that will be executing the job
 - Replace [script path] with the location of your shell script
 
