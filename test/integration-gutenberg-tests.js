@@ -39,6 +39,7 @@ describe('api integration', function() {
 						function(err, data) {
 							should.not.exist(err);
 							should.exist(data);
+							should.exist(data.content);
 							item_callback(err);
 						});
 				},

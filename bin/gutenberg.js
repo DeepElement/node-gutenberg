@@ -16,22 +16,79 @@ var gutenberg = function(options) {
 
 gutenberg.prototype.getCatalogueItemByKey = function(key, callback) {
 	var keyClean = key.replace('etext', '');
-	var documentRoot = path.join(this._rsyncDir, keyClean[0], keyClean[1], keyClean[2],keyClean[3], keyClean);
+	var documentRoot = this._rsyncDir;
+	if (keyClean.length > 0) {
+		documentRoot = path.join(documentRoot, keyClean[0]);
+	}
+	if (keyClean.length > 1) {
+		documentRoot = path.join(documentRoot, keyClean[1]);
+	}
+
+	if (keyClean.length > 2) {
+		documentRoot = path.join(documentRoot, keyClean[2]);
+	}
+
+	if (keyClean.length > 3) {
+		documentRoot = path.join(documentRoot, keyClean[3]);
+	}
+
+	var documentRoot = path.join(documentRoot, keyClean);
 	var contentZipFile = path.join(documentRoot, keyClean + ".zip");
-	var zip = new AdmZip(contentZipFile);
-	var data = zip.readAsText(keyClean + ".txt");
-	callback(null, data);
+	try {
+		var zip = new AdmZip(contentZipFile);
+		var data = zip.readAsText(keyClean + ".txt");
+		this._ContentParseRecord(
+			data, callback);
+	} catch (ex) {
+		return callback(ex);
+	}
 }
 
 // Parms: format
 gutenberg.prototype.catalogueGetRecords = function(options, callback) {
 	var self = this;
-	self._parseRecords(function(err, records) {
+	self._CatalogueParseRecords(function(err, records) {
 		return callback(err, records);
 	});
 }
 
-gutenberg.prototype._parseRecords = function(callback) {
+gutenberg.prototype._ContentParseRecord = function(content, callback) {
+
+	var indexOfHeaderStart = content.indexOf("*** START OF THIS PROJECT GUTENBERG");
+	var indexOfHeaderEnd = content.indexOf('\n', indexOfHeaderStart);
+	var header = content.substr(0, indexOfHeaderEnd);
+
+	var indexOfFooterStart = content.indexOf("End of the Project Gutenberg");
+	var footer = content.substr(indexOfFooterStart, content.length);
+
+	var cleanContent = content.substr(indexOfHeaderEnd, indexOfFooterStart - indexOfHeaderEnd);
+
+	var indexAuthorStart = header.indexOf('Author:');
+	var indexAuthorEnd = header.indexOf('\n', indexAuthorStart);
+	var authorsList = header.substr(indexAuthorStart, indexAuthorEnd - indexAuthorStart).replace("Author:", "").trim().split('and');
+	var authors = [];
+	authorsList.forEach(function(a) {
+		authors.push(a.trim());
+	});
+
+	var indexOfTitleStart = header.indexOf("Title:");
+	var indexOfTitleEnd = header.indexOf('\n', indexOfTitleStart);
+	var title = header.substr(indexOfTitleStart, indexOfTitleEnd - indexOfTitleStart).replace("Title:", "").trim();
+
+	var indexOfLanguageStart = header.indexOf("Language:");
+	var indexOfLanguageEnd = header.indexOf('\n', indexOfLanguageStart);
+	var language = header.substr(indexOfLanguageStart, indexOfLanguageEnd - indexOfLanguageStart).replace("Language:", "").trim();
+
+	var result = {
+		title: title,
+		language: language,
+		authors: authors,
+		content : cleanContent
+	};
+	return callback(null, result);
+}
+
+gutenberg.prototype._CatalogueParseRecords = function(callback) {
 	var results = [];
 
 	var zip = new AdmZip(this._rdfZipFile);
