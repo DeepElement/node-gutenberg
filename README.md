@@ -2,7 +2,7 @@ node-gutenberg
 ==============
 APIs for interacting with Project Gutenberg
 
-[![Build Status](https://travis-ci.org/DeepElement/node-gutenberg.png?branch=master)](https://travis-ci.org/DeepElement/node-gutenberg)
+[![Build Status](https://travis-ci.org/DeepElement/node-gutenberg.png?branch=master)](https://travis-ci.org/DeepElement/node-gutenberg)  [![npm status](https://nodei.co/npm/gutenberg.png?compact=true)](https://nodei.co/npm/gutenberg.png?compact=true)
 #Setup
 
 1. [rsync](http://ss64.com/bash/rsync.html) the Gutenberg catalogue to a local directory using the [Mirror instructions ](http://www.gutenberg.org/wiki/Gutenberg:Mirroring_How-To) provided by http://www.gutenberg.org/.
