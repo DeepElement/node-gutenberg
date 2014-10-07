@@ -40,7 +40,7 @@ describe('api integration', function() {
         it('MaxImported Count', function(done) {
             this.timeout(999999);
             instance = new gutenberg();
-            var maxImported = 5;
+            var maxImported = 2;
             instance.getCatalogueMetadata({
                     maxImported: maxImported
                 },
@@ -99,7 +99,7 @@ describe('api integration', function() {
         beforeEach(function(done) {
             instance = new gutenberg();
             instance.getCatalogueMetadata({
-                    maxImported: 10
+                    maxImported: 2
                 },
                 function(err, keysResp) {
                     if (err)
