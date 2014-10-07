@@ -3,7 +3,7 @@
   "name": "gutenberg",
   "private": false,
   "description": "Apis for the gutenberg catalog",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "repository": {
     "url": "https://github.com/DeepElement/node-gutenberg.git"
   },
@@ -14,9 +14,12 @@
   "dependencies": {
     "request" : "2.30.0",
     "async" : "0.2.9",
-    "adm-zip" : "0.4.3",
     "mkdirp" : "0.3.5",
-    "libxmljs" : "0.8.1"
+    "jsftp": "1.3.4",
+    "temp": "0.8.1",
+    "download": "2.0.0",
+    "tar-stream": "1.0.0",
+    "xml2js": "0.4.4"
   },
   "devDependencies": {
     "should" : "2.1.1",
