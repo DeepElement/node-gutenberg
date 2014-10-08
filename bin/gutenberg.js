@@ -13,7 +13,7 @@ var async = require('async'),
 var gutenberg = function(options) {
     this.options = options || {};
     this._ftpClient = new ftp({
-        host: 'mirrors.xmission.com',
+        host: 'sailor.gutenberg.lib.md.us',
         debugMode: true,
         port: 21
     });
@@ -49,7 +49,7 @@ gutenberg.prototype.getCatalogueMetadata = function(data, callback) {
                             if (err) {
                                 return extractCallback(err);
                             }
-                            if (resp.title && resp.formats.length > 0)
+                            if (resp.title && resp.formats.length > 0 && resp.author != null)
                                 results.push(resp);
                             return extractCallback();
                         });
@@ -148,6 +148,7 @@ gutenberg.prototype._parseRecord = function(record, callback) {
         if (err)
             return callback(err);
 
+
         try {
             response.id = jsonRecord['rdf:RDF']['pgterms:ebook'][0]['$']['rdf:about'].replace('ebooks/', '');
             if (jsonRecord['rdf:RDF']['pgterms:ebook'][0]['dcterms:language'][0]) {
@@ -171,7 +172,6 @@ gutenberg.prototype._parseRecord = function(record, callback) {
 
 
             var creatorNode = null;
-
             if (jsonRecord['rdf:RDF']['pgterms:ebook'][0]['dcterms:creator']) {
                 creatorNode = jsonRecord['rdf:RDF']['pgterms:ebook'][0]['dcterms:creator'];
             } else {
@@ -187,10 +187,14 @@ gutenberg.prototype._parseRecord = function(record, callback) {
                 }
             }
 
-            if (creatorNode) {
-                response.author = creatorNode[0]['pgterms:agent'][0]['pgterms:name'][0];
-            } else {
-                response.author = 'Unknown';
+            try {
+                if (creatorNode) {
+                    response.author = creatorNode[0]['pgterms:agent'][0]['pgterms:name'][0];
+                } else {
+                    response.author = 'Unknown';
+                }
+            } catch (ex) {
+                // do nothing
             }
 
             if (jsonRecord['rdf:RDF']['pgterms:ebook'][0]['dcterms:issued']) {
@@ -247,15 +251,16 @@ gutenberg.prototype._hydrateCatalogue = function(data, callback) {
         return callback(null, self._masterCataloguePath);
 };
 
-
 gutenberg.prototype.getCatalogueItemByKey = function(data, callback) {
-    var id = data.id;
+    var id = String(data.id);
     var extension = data.extension;
     var _self = this;
+
     _self.getCatalogueMetadataById(id,
         function(err, item) {
             if (err)
                 return callback(err);
+
             var formatList = item.formats.filter(function(f) {
                 if (f.extension == extension)
                     return true;
@@ -292,15 +297,9 @@ gutenberg.prototype.getCatalogueItemByKey = function(data, callback) {
                 if (contentFile) {
                     var content = "";
 
-                    console.log(contentFile);
                     _self._ftpClient.get(contentFile, function(err, socket) {
-                        if (err) {
-                            console.log({
-                                err: err,
-                                file: contentFile
-                            });
+                        if (err)
                             return callback(err);
-                        }
 
                         socket.on("data", function(d) {
                             content += d.toString();
@@ -308,6 +307,7 @@ gutenberg.prototype.getCatalogueItemByKey = function(data, callback) {
                         socket.on("close", function(err) {
                             if (err)
                                 return callback(err);
+                            
                             gutenberg.prototype._ContentParseRecord(
                                 content, callback);
                         });

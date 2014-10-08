@@ -93,27 +93,11 @@ describe('api integration', function() {
     });
 
     describe('getCatalogueItemByKey', function() {
-        var instance;
-        var sampleMetadata = [];
-
-        beforeEach(function(done) {
-            instance = new gutenberg();
-            instance.getCatalogueMetadata({
-                    maxImported: 2
-                },
-                function(err, keysResp) {
-                    if (err)
-                        return done(err);
-                    sampleMetadata = keysResp;
-                    return done();
-                });
-        });
-
-        it('Standard Success - Fixed - Above 10000', function(done) {
+        it('Standard Success - Fixed - new Format', function(done) {
             this.timeout(999999);
             instance = new gutenberg();
             instance.getCatalogueItemByKey({
-                    id: 10005,
+                    id: 10075,
                     extension: 'txt'
                 },
                 function(err, contentResp) {
@@ -128,11 +112,11 @@ describe('api integration', function() {
                 });
         });
 
-        it('Standard Success - Fixed - Below 10000', function(done) {
+        it('Standard Success - Fixed - Old Format', function(done) {
             this.timeout(999999);
-            instance = new gutenberg();
+            var instance = new gutenberg();
             instance.getCatalogueItemByKey({
-                    id: 9999,
+                    id: 5000,
                     extension: 'txt'
                 },
                 function(err, contentResp) {
@@ -150,24 +134,34 @@ describe('api integration', function() {
         it('Standard Success - Dynamic', function(done) {
             this.timeout(999999);
 
-            async.eachSeries(sampleMetadata,
-                function(meta, metaCb) {
-                    instance.getCatalogueItemByKey({
-                            id: meta.id,
-                            extension: 'txt'
-                        },
-                        function(err, contentResp) {
-                            if (err)
-                                return metaCb(err);
-
-                            should.exist(contentResp.header);
-                            should.exist(contentResp.footer);
-                            should.exist(contentResp.content);
-
-                            return metaCb();
-                        });
+            var instance = new gutenberg();
+            instance.getCatalogueMetadata({
+                    maxImported: 2
                 },
-                done);
+                function(err, keysResp) {
+                    if (err)
+                        return done(err);
+
+                    async.eachSeries(keysResp,
+                        function(meta, metaCb) {
+                            instance.getCatalogueItemByKey({
+                                    id: meta.id,
+                                    extension: 'txt'
+                                },
+                                function(err, contentResp) {
+                                    if (err)
+                                        return metaCb(err);
+
+                                    should.exist(contentResp.header);
+                                    should.exist(contentResp.footer);
+                                    should.exist(contentResp.content);
+
+                                    return metaCb();
+                                });
+                        },
+                        done);
+                });
+
         });
     });
 });
