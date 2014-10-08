@@ -79,13 +79,13 @@ describe('api integration', function() {
                         meta.id,
                         function(err, r) {
                             if (err)
-                                return done(err);
+                                return metaCb(err);
 
                             should.exist(r);
                             should.exist(r.id);
                             r.id.should.equal(meta.id);
 
-                            return done();
+                            return metaCb();
                         });
                 },
                 done);
