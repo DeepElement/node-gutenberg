@@ -12,11 +12,8 @@ var async = require('async'),
 // Constructor
 var gutenberg = function(options) {
     this.options = options || {};
-    this._ftpClient = new ftp({
-        host: 'sailor.gutenberg.lib.md.us',
-        debugMode: true,
-        port: 21
-    });
+
+    this._host = 'sailor.gutenberg.lib.md.us';
     this._catalogueAddress = this.options.catalogue || 'http://gutenberg.readingroo.ms/cache/generated/feeds/rdf-files.tar.zip';
     this._masterCataloguePath = null;
 };
@@ -297,9 +294,16 @@ gutenberg.prototype.getCatalogueItemByKey = function(data, callback) {
                 if (contentFile) {
                     var content = "";
 
-                    _self._ftpClient.get(contentFile, function(err, socket) {
+                    var ftpClient = new ftp({
+                        host: _self._host,
+                        debugMode: true,
+                        port: 21
+                    });
+
+                    ftpClient.get(contentFile, function(err, socket) {
                         if (err)
                             return callback(err);
+
 
                         socket.on("data", function(d) {
                             content += d.toString();
@@ -307,7 +311,10 @@ gutenberg.prototype.getCatalogueItemByKey = function(data, callback) {
                         socket.on("close", function(err) {
                             if (err)
                                 return callback(err);
-                            
+
+
+                            ftpClient.destroy();
+
                             gutenberg.prototype._ContentParseRecord(
                                 content, callback);
                         });
