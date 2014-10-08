@@ -5,6 +5,9 @@ var util = require('./test'),
     async = require('async'),
     fs = require('fs');
 
+
+var maxImport = 2;
+
 describe('api integration', function() {
     describe('getCatalogueMetadata', function() {
         var instance;
@@ -14,7 +17,7 @@ describe('api integration', function() {
             this.timeout(999999);
             instance = new gutenberg();
             instance.getCatalogueMetadata({
-                    maxImported: 11000
+                    maxImported: maxImport
                 },
                 function(err, keysResp) {
                     if (err)
@@ -40,9 +43,8 @@ describe('api integration', function() {
         it('MaxImported Count', function(done) {
             this.timeout(999999);
             instance = new gutenberg();
-            var maxImported = 2;
             instance.getCatalogueMetadata({
-                    maxImported: maxImported
+                    maxImported: maxImport
                 },
                 function(err, keysResp) {
                     if (err)
@@ -60,7 +62,7 @@ describe('api integration', function() {
         beforeEach(function(done) {
             instance = new gutenberg();
             instance.getCatalogueMetadata({
-                    maxImported: 5
+                    maxImported: maxImport
                 },
                 function(err, keysResp) {
                     if (err)
@@ -136,7 +138,7 @@ describe('api integration', function() {
 
             var instance = new gutenberg();
             instance.getCatalogueMetadata({
-                    maxImported: 2
+                    maxImported: maxImport
                 },
                 function(err, keysResp) {
                     if (err)
