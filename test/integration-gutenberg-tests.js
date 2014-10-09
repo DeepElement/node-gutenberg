@@ -8,23 +8,12 @@ var util = require('./test'),
 
 var maxImport = 2;
 
+
+loggingTimerId = setInterval(function() {
+    console.log('...');
+}, 2000);
+
 describe('api integration', function() {
-
-    var loggingTimerId = null;
-    beforeEach(function(done) {
-        if (!loggingTimerId) {
-            loggingTimerId = setInterval(function(){
-                console.log('...');
-            }, 2000);
-        }
-    });
-
-    afterEach(function(done) {
-        if (loggingTimerId) {
-            clearInterval(loggingTimerId);
-            loggingTimerId = null;
-        }
-    });
 
     describe('getCatalogueMetadata', function() {
         var instance;
