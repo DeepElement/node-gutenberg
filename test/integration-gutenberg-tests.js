@@ -44,12 +44,12 @@ describe('api integration', function() {
             this.timeout(999999);
             instance = new gutenberg();
             instance.getCatalogueMetadata({
-                    maxImported: maxImport
+                    maxImported: 2
                 },
                 function(err, keysResp) {
                     if (err)
                         return done(err);
-                    keysResp.length.should.equal(maxImported);
+                    keysResp.length.should.equal(maxImport);
                     return done();
                 });
         });

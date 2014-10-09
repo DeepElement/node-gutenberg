@@ -4,7 +4,6 @@ var async = require('async'),
     mkdirp = require('mkdirp'),
     temp = require("temp").track(),
     Download = require('download'),
-    tar = require('tar-stream'),
     parseString = require('xml2js').parseString,
     util = require('util'),
     ftp = require('jsftp');
@@ -13,7 +12,7 @@ var async = require('async'),
 var gutenberg = function(options) {
     this.options = options || {};
 
-    this._host = 'sailor.gutenberg.lib.md.us';
+    this._host = 'gutenberg.readingroo.ms';
     this._catalogueAddress = this.options.catalogue || 'http://gutenberg.readingroo.ms/cache/generated/feeds/rdf-files.tar.zip';
     this._masterCataloguePath = null;
 };
@@ -27,7 +26,9 @@ gutenberg.prototype.getCatalogueMetadata = function(data, callback) {
         if (err)
             return callback(err);
 
+        var tar = require('tar-stream');
         var extract = tar.extract();
+        var hasReturned = false;
         extract.on('entry', function(header, stream, extractCallback) {
             if (results.length >= maxImported) {
                 extract.destroy();
@@ -58,15 +59,24 @@ gutenberg.prototype.getCatalogueMetadata = function(data, callback) {
         });
 
         extract.on('close', function(err) {
-            return callback(null, results);
+            if (!hasReturned) {
+                hasReturned = true;
+                return callback(null, results);
+            }
         });
 
         extract.on('error', function(err) {
-            return callback(err);
+            if (!hasReturned) {
+                hasReturned = true;
+                return callback(err);
+            }
         });
 
         extract.on('finish', function(err) {
-            return callback(err, results);
+            if (!hasReturned) {
+                hasReturned = true;
+                return callback(null, results);
+            }
         });
 
         fs.createReadStream(catalogueFilePath).pipe(extract);
@@ -82,6 +92,7 @@ gutenberg.prototype.getCatalogueMetadataById = function(id, callback) {
         if (err)
             return callback(err);
 
+        var tar = require('tar-stream');
         var extract = tar.extract();
         extract.on('entry', function(header, stream, extractCallback) {
             if (result) {
